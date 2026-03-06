@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paper Airplane</title>
+    <style>
+      #game {
+        width: 400px;
+        height: 600px;
+        border: 2px solid black;
+        position: relative;
+        background: skyblue;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+      #plane {
+        width: 30px;
+        height: 30px;
+        background: yellow;
+        border-radius: 50%;
+        position: absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game"><div id="plane"></div></div>
+  </body>
+  <script>
+    console.log("Game starting...");
+    let plane = document.getElementById("plane");
+    let game = document.getElementById("game");
+    let planeY = 200;
+    plane.style.top = planeY + "px";
+    const gameInterval = setInterval(fall, 24);
+    function fall() {
+      planeY += 2;
+      plane.style.top = planeY + "px";
+
+      const isOutOfBound = planeY > game.clientHeight;
+      if (isOutOfBound) {
+        planeY = 200;
+        clearInterval(gameInterval);
+        alert("game over");
+      }
+    }
+
+    fall();
+  </script>
+</html>
