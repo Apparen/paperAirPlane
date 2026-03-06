@@ -31,15 +31,19 @@
     let plane = document.getElementById("plane");
     let game = document.getElementById("game");
     let planeY = 200;
+    let velocity = 0;
+    let gravity = 0.5;
+    let jumpStrength = -7;
     plane.style.top = planeY + "px";
     const gameInterval = setInterval(fall, 24);
+
     function fall() {
-      planeY += 2;
+      velocity += gravity;
+      planeY += velocity;
       plane.style.top = planeY + "px";
 
-      const isOutOfBound = planeY > game.clientHeight;
+      const isOutOfBound = planeY > game.clientHeight || planeY < 0;
       if (isOutOfBound) {
-        planeY = 200;
         clearInterval(gameInterval);
         alert("game over");
       }
@@ -47,8 +51,7 @@
 
     fall();
     game.addEventListener("click", function () {
-      planeY -= 30;
-      plane.style.top = planeY + "px";
+      velocity = jumpStrength;
     });
   </script>
 </html>
