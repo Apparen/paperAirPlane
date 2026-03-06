@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Paper Airplane</title>
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
       #game {
         width: 400px;
         height: 600px;
@@ -21,22 +26,46 @@
         border-radius: 50%;
         position: absolute;
       }
+      #start {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: azure;
+        border-radius: 10px;
+      }
     </style>
   </head>
   <body>
-    <div id="game"><div id="plane"></div></div>
+    <div id="game">
+      <div id="start">Start Game</div>
+      <div id="plane"></div>
+    </div>
   </body>
   <script>
     console.log("Game starting...");
     let plane = document.getElementById("plane");
     let game = document.getElementById("game");
-    let planeY = 200;
+    let start = document.getElementById("start");
+    plane.style.display = "none";
+    let planeY = 180;
     let velocity = 0;
     let gravity = 0.5;
     let jumpStrength = -7;
+    let gameInterval;
     plane.style.top = planeY + "px";
-    const gameInterval = setInterval(fall, 24);
-
+    document.getElementById("start").addEventListener("click", function () {
+      gameStart();
+    });
+    function gameStart() {
+      start.style.display = "none";
+      plane.style.display = "block";
+      gameInterval = setInterval(fall, 24);
+    }
     function fall() {
       velocity += gravity;
       planeY += velocity;
@@ -45,11 +74,14 @@
       const isOutOfBound = planeY > game.clientHeight || planeY < 0;
       if (isOutOfBound) {
         clearInterval(gameInterval);
-        alert("game over");
+        start.style.display = "block";
+        start.style.backgroundColor = "red";
+        start.textContent = "Game Over!";
+        planeY = 180;
+        plane.style.top = planeY + "px";
       }
     }
 
-    fall();
     game.addEventListener("click", function () {
       velocity = jumpStrength;
     });
