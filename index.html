@@ -53,6 +53,7 @@
         start.textContent = "Game Over!";
         planeY = 180;
         plane.style.top = planeY + "px";
+        game.querySelectorAll(".pipe").forEach((pipe) => pipe.remove());
       }
     }
     let pipes = [];
@@ -66,10 +67,12 @@
       pipeTop.classList.add("pipe", "pipe-top");
       pipeTop.style.top = 0;
       pipeTop.style.height = gapY + "px";
+      pipeTop.style.left = pipeX + "px";
 
       pipeBottom.classList.add("pipe", "pipe-bottom");
       pipeBottom.style.bottom = 0;
       pipeBottom.style.height = `${game.clientHeight - gapY - gapSize}px`;
+      pipeBottom.style.left = pipeX + "px";
 
       console.log(pipeBottom.style.height + "px");
       console.log(pipeTop.style.height + "px");
@@ -80,6 +83,11 @@
         x: pipeX,
         passed: false,
       };
+      console.log("Pipa dibuat di X:", pipeX);
+      console.log(
+        "Jumlah pipa di layar:",
+        document.querySelectorAll(".pipe").length,
+      );
       pipes.push(pipePair);
       console.log(pipePair);
       game.appendChild(pipeTop);
@@ -91,8 +99,8 @@
         let pipe = pipes[i];
         pipe.x -= 2;
 
-        pipe.top.style.right = game.clientWidth - pipe.x + "px";
-        pipe.bottom.style.right = game.clientWidth - pipe.x + "px";
+        pipe.top.style.left = pipe.x + "px";
+        pipe.bottom.style.left = pipe.x + "px";
 
         if (pipe.x + 60 < 0) {
           pipe.top.remove();

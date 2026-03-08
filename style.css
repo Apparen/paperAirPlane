@@ -19,7 +19,7 @@
         background: yellow;
         border-radius: 50%;
         position: absolute;
-        /* left: 50px; */
+        left: 50px;
       }
       #start {
         display: block;
@@ -40,9 +40,9 @@
     }
     .pipe-top{
       top: 0;
-      height: 200px;
+      /* height: 200px; */
     }
     .pipe-bottom{
       bottom: 0;
-      height: 200px;
+      /* height: 200px; */
     }
