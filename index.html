@@ -10,6 +10,7 @@
     <div id="game">
       <div id="start">Start Game</div>
       <div id="plane"></div>
+      <div id="score-display">Score: 0</div>
     </div>
   </body>
   <script>
@@ -25,7 +26,8 @@
     let gameInterval;
     let frameCount = 0;
     let spawnRate = 100;
-
+    let score = 0;
+    let pipes = [];
     plane.style.top = planeY + "px";
     document.getElementById("start").addEventListener("click", function () {
       gameStart();
@@ -45,18 +47,27 @@
         createPipe();
       }
 
+      if (checkCollision()) {
+        gameOver();
+        return;
+      }
       const isOutOfBound = planeY > game.clientHeight || planeY < 0;
       if (isOutOfBound) {
-        clearInterval(gameInterval);
-        start.style.display = "block";
-        start.style.backgroundColor = "red";
-        start.textContent = "Game Over!";
-        planeY = 180;
-        plane.style.top = planeY + "px";
-        game.querySelectorAll(".pipe").forEach((pipe) => pipe.remove());
+        gameOver();
       }
     }
-    let pipes = [];
+    function gameOver() {
+      clearInterval(gameInterval);
+      start.style.display = "block";
+      start.style.backgroundColor = "red";
+      start.textContent = "Game Over!";
+      planeY = 180;
+      plane.style.top = planeY + "px";
+      game.querySelectorAll(".pipe").forEach((pipe) => pipe.remove());
+      score = 0;
+      document.getElementById("score-display").textContent = "Score: " + score;
+    }
+
     function createPipe() {
       let gapY = Math.random() * 300 + 100;
       let pipeX = game.clientWidth;
@@ -83,13 +94,13 @@
         x: pipeX,
         passed: false,
       };
-      console.log("Pipa dibuat di X:", pipeX);
-      console.log(
-        "Jumlah pipa di layar:",
-        document.querySelectorAll(".pipe").length,
-      );
+      // console.log("Pipa dibuat di X:", pipeX);
+      // console.log(
+      //   "Jumlah pipa di layar:",
+      //   document.querySelectorAll(".pipe").length,
+      // );s
       pipes.push(pipePair);
-      console.log(pipePair);
+      // console.log(pipePair);
       game.appendChild(pipeTop);
       game.appendChild(pipeBottom);
     }
@@ -102,12 +113,46 @@
         pipe.top.style.left = pipe.x + "px";
         pipe.bottom.style.left = pipe.x + "px";
 
+        if (!pipe.passed && pipe.x + 60 < plane.offsetLeft) {
+          score++;
+          pipe.passed = true;
+          document.getElementById("score-display").textContent =
+            "Score: " + score;
+          console.log("Score:", score);
+        }
         if (pipe.x + 60 < 0) {
           pipe.top.remove();
           pipe.bottom.remove();
           pipes.splice(i, 1);
         }
       }
+    }
+
+    function checkCollision() {
+      let planeRect = plane.getBoundingClientRect();
+      let gameRect = game.getBoundingClientRect();
+
+      for (let pipe of pipes) {
+        let topRect = pipe.top.getBoundingClientRect();
+        let bottomRect = pipe.bottom.getBoundingClientRect();
+
+        if (
+          rectOverlap(planeRect, topRect) ||
+          rectOverlap(planeRect, bottomRect)
+        ) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function rectOverlap(rect1, rect2) {
+      return !(
+        rect2.left > rect1.right ||
+        rect2.right < rect1.left ||
+        rect2.top > rect1.bottom ||
+        rect2.bottom < rect1.top
+      );
     }
     game.addEventListener("click", function () {
       velocity = jumpStrength;
