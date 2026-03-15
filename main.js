@@ -1,0 +1,26 @@
+import { createPipe, movePipes } from "./pipes.js";
+import { fall, checkCollision, gameOver } from "./game.js";
+console.log("Game starting...");
+let plane = document.getElementById("plane");
+let game = document.getElementById("game");
+let start = document.getElementById("start");
+plane.style.display = "none";
+let planeY = 180;
+let velocity = 0;
+let gravity = 0.5;
+let jumpStrength = -7;
+let gameInterval;
+let frameCount = 0;
+let spawnRate = 100;
+let score = 0;
+let pipes = [];
+plane.style.top = planeY + "px";
+document.getElementById("start").addEventListener("click", function () {
+    gameStart();
+});
+function gameStart() {
+    start.style.display = "none";
+    plane.style.display = "block";
+    gameInterval = setInterval(fall, 24);
+}
+

@@ -1,0 +1,60 @@
+function createPipe() {
+    let gapY = Math.random() * 300 + 100;
+    let pipeX = game.clientWidth;
+    let gapSize = 150;
+    let pipeTop = document.createElement("div");
+    let pipeBottom = document.createElement("div");
+
+    pipeTop.classList.add("pipe", "pipe-top");
+    pipeTop.style.top = 0;
+    pipeTop.style.height = gapY + "px";
+    pipeTop.style.left = pipeX + "px";
+
+    pipeBottom.classList.add("pipe", "pipe-bottom");
+    pipeBottom.style.bottom = 0;
+    pipeBottom.style.height = `${game.clientHeight - gapY - gapSize}px`;
+    pipeBottom.style.left = pipeX + "px";
+
+    console.log(pipeBottom.style.height + "px");
+    console.log(pipeTop.style.height + "px");
+
+    let pipePair = {
+        top: pipeTop,
+        bottom: pipeBottom,
+        x: pipeX,
+        passed: false,
+    };
+    // console.log("Pipa dibuat di X:", pipeX);
+    // console.log(
+    //   "Jumlah pipa di layar:",
+    //   document.querySelectorAll(".pipe").length,
+    // );s
+    pipes.push(pipePair);
+    // console.log(pipePair);
+    game.appendChild(pipeTop);
+    game.appendChild(pipeBottom);
+}
+
+function movePipes() {
+    for (let i = pipes.length - 1; i >= 0; i--) {
+        let pipe = pipes[i];
+        pipe.x -= 2;
+
+        pipe.top.style.left = pipe.x + "px";
+        pipe.bottom.style.left = pipe.x + "px";
+
+        if (!pipe.passed && pipe.x + 60 < plane.offsetLeft) {
+            score++;
+            pipe.passed = true;
+            document.getElementById("score-display").textContent =
+                "Score: " + score;
+            console.log("Score:", score);
+        }
+        if (pipe.x + 60 < 0) {
+            pipe.top.remove();
+            pipe.bottom.remove();
+            pipes.splice(i, 1);
+        }
+    }
+}
+export { createPipe, movePipes };
